@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 pragma abicoder v2;
 
 import "./Ownable.sol";
+import "hardhat/console.sol";
 
 contract Library is Ownable {
 
@@ -73,12 +74,22 @@ contract Library is Ownable {
     
     function getAvailableTitles() public view returns (Book[] memory) {
         require(uniqueTitles > 0, "Library is empty, need to add books first");
-        Book[] memory ret = new Book[](uniqueTitles);
+        
 
+        uint32 retSize = 0;
         for(uint32 i = 0; i < uniqueTitles; i++) {
             if(books[i].availableCopies > 0) {
-                ret[i].title = books[i].title;
-                ret[i].availableCopies = books[i].availableCopies;
+                retSize++;
+            }
+        }
+
+        uint32 retPosition = 0;
+        Book[] memory ret = new Book[](retSize);
+        for(uint32 i = 0; i < uniqueTitles; i++) {
+            if(books[i].availableCopies > 0) {
+                ret[retPosition].title = books[i].title;
+                ret[retPosition].availableCopies = books[i].availableCopies;
+                retPosition++;
             }
         }
 
